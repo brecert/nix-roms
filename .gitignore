@@ -1,2 +1,6 @@
-agbcc
-dkp
+/agbcc
+/dkp
+/pokeruby
+*.gba
+*.gbc
+result
