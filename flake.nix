@@ -7,6 +7,7 @@
   let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
+    
     inherit(pkgs) lib stdenv;
     
     buildGBCRom = { name, src, ... }@attrs:
@@ -35,10 +36,72 @@
       } // attrs);
 
     packages = {
-      # devkitarm = {};
+      agbcc = pkgs.stdenvNoCC.mkDerivation {
+        name = "agbcc";
+        src = pkgs.fetchFromGitHub {
+          owner = "pret";
+          repo = "agbcc";
+          rev = "faa413eb0e76fad87875b7680f77e0c43df694cd";
+          sha256 = "sha256-QgjAQ/n2Cnh3VyLdGiuBveTJYNitp3MLsFD7blpQo0o=";
 
-      # gba c compiler for pret projects
-      # agbcc = stdenv.mkDerivation {}
+          meta = {
+            homepage = "https://github.com/pret/agbcc";
+            description = "c compiler";
+          };
+        };
+        
+        nativeBuildInputs = with pkgs; [
+          gcc
+          gcc-arm-embedded-8
+          bash
+        ];
+
+        makeFlags = [
+          "--enable-gold"
+        ];
+
+        enableParallelBuilding = true;
+
+        hardeningDisable = [ "format" ];
+        
+        postPatch = ''
+          substituteInPlace libc/Makefile \
+              --replace /bin/bash ${pkgs.bash}/bin/bash
+        '';
+        
+        buildPhase = ''
+          make -C gcc old
+          mv gcc/old_agbcc .
+
+          make -C gcc clean
+          make -C gcc
+          mv gcc/agbcc .
+
+          rm -f gcc_arm/config.status gcc_arm/config.cache
+          cd gcc_arm && ./configure --target=arm-elf --host=i386-linux-gnu && make cc1 && cd ..
+          mv gcc_arm/cc1 agbcc_arm
+
+          make -C libgcc
+          mv libgcc/libgcc.a .
+
+          make -C libc
+          mv libc/libc.a .
+        '';
+
+        installPhase = ''
+          mkdir -p $out/bin $out/include $out/lib
+
+          mv agbcc $out/bin/
+          mv old_agbcc $out/bin/
+          mv agbcc_arm $out/bin/
+
+          mv libc/include $out
+          mv ginclude/* $out/include/
+
+          mv libgcc.a $out/lib
+          mv libc.a $out/lib
+        '';
+      };
 
       pokeredblue = buildGBCRom {
         name = "pokeredblue";
