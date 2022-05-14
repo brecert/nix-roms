@@ -37,18 +37,15 @@ let
     rev = "64e2b66a610d330bfdad108a603027be9652a7e7";
     sha256 = "sha256-SfStLJbh8FvwBPfF/2TZVTW9cKY8tQNAk0Li8ajeTPI=";
   };
+
+  pokegold-src = fetchFromGitHub {
+    owner = "pret";
+    repo = "pokegold";
+    rev = "3ce41509db5a3c95ea6cec173e79557b771857a7";
+    sha256 = "sha256-xr1jaOA+dXKg2mG2aSn9B5Lxp9uJCYdPUho2TlRFJX0=";
+  };
 in
 {
-  pokeredblue = buildGBCRom {
-    name = "pokeredblue";
-    src = pokered-src;
-    installPhase = ''
-      mkdir $out
-      mv pokered.gbc $out/pokered.gbc
-      mv pokeblue.gbc $out/pokeblue.gbc
-    '';
-  };
-
   pokered = buildGBCRom {
     name = "pokered";
     src = pokered-src;
@@ -71,12 +68,12 @@ in
 
   pokegold = buildGBCRom {
     name = "pokegold";
-    src = fetchFromGitHub {
-      owner = "pret";
-      repo = "pokegold";
-      rev = "3ce41509db5a3c95ea6cec173e79557b771857a7";
-      sha256 = "sha256-xr1jaOA+dXKg2mG2aSn9B5Lxp9uJCYdPUho2TlRFJX0=";
-    };
+    src = pokegold-src;
+  };
+
+  pokesilver = buildGBCRom {
+    name = "pokesilver";
+    src = pokegold-src;
   };
 
   pokecrystal = buildGBCRom {
