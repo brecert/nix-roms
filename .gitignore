@@ -7,9 +7,11 @@
 result
 *.gba
 *.gbc
+*.bin
 
 # mgba
 patch
 savegame
 savestate
 screenshot
+cheats
