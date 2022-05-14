@@ -14,13 +14,13 @@
 
       flattenAttrList = lib.lists.foldr (a: b: lib.recursiveUpdate a b) { };
 
-      gbaTools = import ./gba/tools.nix pkgs;
+      gbaTools = import ./gba/tools pkgs;
     in
     {
       # todo: add sameboy or mGBC runner for fun
       packages.${system} = flattenAttrList [
         gbaTools
-        (import ./gba/games.nix (pkgs // gbaTools))
+        (import ./gba/games.nix pkgs)
         (import ./gbc/games.nix pkgs)
       ];
     };

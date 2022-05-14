@@ -4,28 +4,53 @@
 , gcc-arm-embedded-8
 , libpng
 , bash
-  # gba tools
-, aif2pcm
-, bin2c
-, gbafix
-, gbagfx
-, jsonproc
-, mapjson
-, mid2agb
-, preproc
-, ramscrgen
-, rsfont
-, scaninc
-, agbcc
+, mkToolsFor ? (import ./tools/builders.nix pkgs).mkToolsFor
 , ...
 }:
 
 let
-  mkPokeRubySapphire = { pname, version, ... }@attrs:
-    stdenv.mkDerivation (rec {
-      inherit pname version;
+  buildGBARom = { src, gbaTools ? mkToolsFor src, ... }@attrs: stdenv.mkDerivation ({
+    inherit src;
 
-      gameName = builtins.elemAt (builtins.split "_" version) 0;
+    nativeBuildInputs = [ gcc-arm-embedded-8 ];
+
+    buildInputs = [ libpng ];
+
+    doFixup = false;
+
+    patchPhase = ''
+      sed -e 's|/bin/bash|${bash}/bin/bash|g' -i Makefile -i *.sh
+
+      rm -r tools
+      mkdir tools
+      ln -s ${gbaTools.aif2pcm} tools/aif2pcm
+      ln -s ${gbaTools.bin2c} tools/bin2c
+      ln -s ${gbaTools.gbafix} tools/gbafix
+      ln -s ${gbaTools.gbagfx} tools/gbagfx
+      ln -s ${gbaTools.jsonproc} tools/jsonproc
+      ln -s ${gbaTools.mapjson} tools/mapjson
+      ln -s ${gbaTools.mid2agb} tools/mid2agb
+      ln -s ${gbaTools.preproc} tools/preproc
+      ln -s ${gbaTools.ramscrgen} tools/ramscrgen
+      ln -s ${gbaTools.rsfont} tools/rsfont
+      ln -s ${gbaTools.scaninc} tools/scaninc
+
+      ln -s ${gbaTools.agbcc} tools/agbcc
+
+      # we already have the tools so we disable tool building
+      substituteInPlace Makefile \
+          --replace "\$(MAKE) tools" ""
+    '';
+
+    buildPhase = ''
+      make $version
+    '';
+
+  } // attrs);
+
+  mkPokeRubySapphire = { pname, version, ... }@attrs:
+    buildGBARom (rec {
+      inherit pname version;
 
       src = pkgs.fetchFromGitHub {
         owner = "pret";
@@ -34,39 +59,21 @@ let
         sha256 = "sha256-4SV0qMa4B1oUehCAvgCv/uvni9TFDIUuSgLE15Z4mkc=";
       };
 
-      nativeBuildInputs = [ gcc-arm-embedded-8 ];
-
-      buildInputs = [ libpng ];
-
-      doFixup = false;
-
-      patchPhase = ''
-        sed -e 's|/bin/bash|${bash}/bin/bash|g' -i Makefile -i *.sh
-
-        rm -r tools
-        mkdir tools
-        ln -s ${aif2pcm} tools/aif2pcm
-        ln -s ${bin2c} tools/bin2c
-        ln -s ${gbafix} tools/gbafix
-        ln -s ${gbagfx} tools/gbagfx
-        ln -s ${jsonproc} tools/jsonproc
-        ln -s ${mapjson} tools/mapjson
-        ln -s ${mid2agb} tools/mid2agb
-        ln -s ${preproc} tools/preproc
-        ln -s ${ramscrgen} tools/ramscrgen
-        ln -s ${rsfont} tools/rsfont
-        ln -s ${scaninc} tools/scaninc
-
-        ln -s ${agbcc} tools/agbcc
-
-        # we already have the tools so we disable tool building
-        substituteInPlace Makefile \
-            --replace "\$(MAKE) tools" ""
+      installPhase = ''
+        mv poke$version.gba $out
       '';
+    } // attrs);
 
-      buildPhase = ''
-        make $version
-      '';
+  mkPokeFireRedLeafGreen = { pname, version, ... }@attrs:
+    buildGBARom ({
+      inherit pname version;
+
+      src = pkgs.fetchFromGitHub {
+        owner = "pret";
+        repo = "pokefirered";
+        rev = "0ef73070401817add41f79cb8ad2a89077e272b7";
+        sha256 = "sha256-lN0W/mF/I4PAsqNz68d+x+/rkVAQJkhnJ8892B12uGU=";
+      };
 
       installPhase = ''
         mv poke$version.gba $out
@@ -86,13 +93,26 @@ let
     # "sapphire_de_rev1"
   ];
 
+  fireRedVersions = [
+    "firered"
+    "firered_rev1"
+    "leafgreen"
+    "leafgreen_rev1"
+  ];
+
   inherit (lib) attrsets;
   inherit (attrsets) nameValuePair;
   inherit (builtins) listToAttrs;
 in
-listToAttrs (map
+(listToAttrs (map
   (version: rec {
     name = "poke${version}";
     value = mkPokeRubySapphire { pname = name; inherit version; };
   })
-  rubyVersions)
+  rubyVersions)) //
+(listToAttrs (map
+  (version: rec {
+    name = "poke${version}";
+    value = mkPokeFireRedLeafGreen { pname = name; inherit version; };
+  })
+  fireRedVersions))
