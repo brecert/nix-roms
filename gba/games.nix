@@ -9,6 +9,7 @@
 }:
 
 let
+  # todo: add parallel build support
   buildGBARom = { src, gbaTools ? mkToolsFor src, ... }@attrs: stdenv.mkDerivation ({
     inherit src;
 
@@ -19,6 +20,8 @@ let
     doFixup = false;
 
     patchPhase = ''
+      runHook prePatch
+
       sed -e 's|/bin/bash|${bash}/bin/bash|g' -i Makefile -i *.sh
 
       rm -r tools
@@ -37,13 +40,21 @@ let
 
       ln -s ${gbaTools.agbcc} tools/agbcc
 
+      runHook postPatch
+    '';
+
+    postBuild = ''
       # we already have the tools so we disable tool building
       substituteInPlace Makefile \
           --replace "\$(MAKE) tools" ""
     '';
 
     buildPhase = ''
+      runHook preBuild
+
       make $version
+
+      runHook postBuild
     '';
 
   } // attrs);
@@ -80,6 +91,28 @@ let
       '';
     } // attrs);
 
+  mkPokeEmerald = { name, ... }@attrs:
+    buildGBARom ({
+      inherit name;
+
+      src = pkgs.fetchFromGitHub {
+        owner = "pret";
+        repo = "pokeemerald";
+        rev = "7d2344c07bea9a46993a92d4611fba80545acdd2";
+        sha256 = "sha256-S9KxF79Ft1VBzlAR4as6+zR03ERwe2Jmhgbt79cpuJE=";
+      };
+
+      installPhase = ''
+        mv pokeemerald.gba $out
+      '';
+
+      postBuild = ''
+        # we already have the tools so we disable tool building
+        substituteInPlace Makefile \
+            --replace "$(MAKE) -f make_tools.mk" ""
+      '';
+    } // attrs);
+
   rubyVersions = [
     "ruby"
     "ruby_rev1"
@@ -104,6 +137,11 @@ let
   inherit (attrsets) nameValuePair;
   inherit (builtins) listToAttrs;
 in
+{
+  pokeemerald = mkPokeEmerald {
+    name = "pokeemerald";
+  };
+} //
 (listToAttrs (map
   (version: rec {
     name = "poke${version}";

@@ -1,6 +1,15 @@
+
 /agbcc
 /dkp
 /pokeruby
+
+# bins
+result
 *.gba
 *.gbc
-result
+
+# mgba
+patch
+savegame
+savestate
+screenshot
