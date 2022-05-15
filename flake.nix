@@ -6,7 +6,10 @@
   outputs = { self, nixpkgs }:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
 
       inherit (pkgs) lib stdenv callPackage;
       inherit (lib) lists attrsets;
@@ -19,13 +22,14 @@
     in
     {
       # todo: add sameboy or mGBC runner for fun
-      packages.${system} = 
+      packages.${system} =
         { inherit (genesisTools) s3p2bin; } //
+        { sm64plus = callPackage ./pc/sm64plus pkgs; } //
         (flattenAttrList [
           gbaTools
           (import ./gba/games.nix pkgs)
           (import ./gbc/games.nix pkgs)
           (import ./genesis/games.nix pkgs)
         ]);
-      };
+    };
 }

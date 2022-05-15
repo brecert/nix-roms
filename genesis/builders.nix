@@ -1,6 +1,6 @@
 { stdenv
 , fetchFromGitHub
-, asl 
+, asl
 , python
 , ...
 }:
@@ -29,7 +29,7 @@ rec {
     '';
   };
 
-  mkSonic3Rom = { name, assembleFlags, ... }@attrs: 
+  mkSonic3Rom = { name, assembleFlags, ... }@attrs:
     stdenv.mkDerivation ({
       inherit name;
 

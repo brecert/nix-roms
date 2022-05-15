@@ -2,12 +2,15 @@
 /agbcc
 /dkp
 /pokeruby
+/sm64
 
 # bins
 result
+.roms
 *.gba
 *.gbc
 *.bin
+*.z64
 
 # mgba
 patch
