@@ -11,9 +11,8 @@
         config.allowUnfree = true;
       };
 
-      inherit (pkgs) lib stdenv callPackage;
-      inherit (lib) lists attrsets;
-      inherit (attrsets) recursiveUpdate;
+      inherit (pkgs) lib callPackage;
+      inherit (lib.attrsets) recursiveUpdate;
 
       flattenAttrList = lib.lists.foldr (a: b: lib.recursiveUpdate a b) { };
 

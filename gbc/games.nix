@@ -2,17 +2,21 @@
 , fetchFromGitHub
 , rgbds
 , which
+, python3
+, lib
 , ...
 }:
 
 let
+  inherit (builtins) listToAttrs;
+  inherit (lib.attrsets) cartesianProductOfSets nameValuePair;
+  inherit (lib.strings) optionalString;
+  inherit (lib.lists) flatten;
+
   buildGBCRom = { name, src, ... }@attrs:
     stdenv.mkDerivation ({
       inherit name src;
-      buildInputs = [
-        rgbds
-        which
-      ];
+      nativeBuildInputs = [ rgbds which ];
 
       buildPhase = ''
         runHook preBuild
@@ -44,6 +48,71 @@ let
     rev = "3ce41509db5a3c95ea6cec173e79557b771857a7";
     sha256 = "sha256-xr1jaOA+dXKg2mG2aSn9B5Lxp9uJCYdPUho2TlRFJX0=";
   };
+
+  ladx-src = fetchFromGitHub {
+    owner = "zladx";
+    repo = "LADX-Disassembly";
+    rev = "2b7d5289b419caaa986f30443e90c7cc0f0f598e";
+    sha256 = "sha256-i5dQiyvffTBtokhhfayEzABgXYvwFkHvSIWrZl8itHs=";
+  };
+
+  ladx-versions = flatten (map cartesianProductOfSets [
+    {
+      romName = [ "azlj" ];
+      language = [ "japanese" ];
+      revision = [ 0 1 2 ];
+    }
+    {
+      romName = [ "azle" ];
+      language = [ "english" ];
+      revision = [ 0 1 2 ];
+    }
+    {
+      romName = [ "azlg" ];
+      language = [ "german" ];
+      revision = [ 0 1 ];
+    }
+    {
+      romName = [ "azlf" ];
+      language = [ "french" ];
+      revision = [ 0 1 ];
+    }
+  ]);
+
+  mkLadxRom = { romName, language, revision, ... }@attrs: stdenv.mkDerivation ({
+    pname = "ladx-${language}";
+    version = "v1.${toString revision}";
+    src = ladx-src;
+
+    romName = "${romName}${optionalString (revision != 0) "-r${toString revision}"}";
+
+    nativeBuildInputs = [ rgbds python3 ];
+
+    buildPhase = ''
+      patchShebangs ./tools ./tools/gfx
+      make $romName.gbc
+    '';
+
+    installPhase = ''
+      runHook preInstall
+
+      mv $romName.gbc $out
+      
+      runHook postInstall
+    '';
+
+    meta = with lib; {
+      homepage = "https://github.com/zladx/LADX-Disassembly";
+      description = "Links Awakening DX ${language} translation";
+    };
+  } // attrs);
+
+  ladx-roms = listToAttrs (map
+    (version: {
+      name = "ladx-${version.language}${optionalString (version.revision != 0) "-r${toString version.revision}"}";
+      value = mkLadxRom version;
+    })
+    ladx-versions);
 in
 {
   pokered = buildGBCRom {
@@ -105,4 +174,4 @@ in
       sha256 = "sha256-fiGuxQVO9FDTaFwZTc2GFZaidQUGwGndigJYwUttmfA=";
     };
   };
-}
+} // ladx-roms
