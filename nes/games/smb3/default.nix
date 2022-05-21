@@ -1,10 +1,8 @@
 { lib
-, pkgs
 , stdenv
 , callPackage
 , fetchFromGitHub
-, nesasm ? (callPackage ../../tools/nesasm pkgs)
-, ...
+, nesasm ? (callPackage ../../tools/nesasm { })
 }:
 
 stdenv.mkDerivation {

@@ -1,10 +1,8 @@
 { lib
-, pkgs
 , stdenv
 , callPackage
 , fetchFromGitHub
-, asm6f ? (callPackage ../../tools/asm6f pkgs)
-, ...
+, asm6f ? (callPackage ../../tools/asm6f { })
 }:
 
 stdenv.mkDerivation {

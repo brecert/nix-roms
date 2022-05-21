@@ -1,5 +1,5 @@
-{ pkgs, callPackage, ... }:
+{ callPackage }:
 
 {
-  asar = callPackage ./tools/asar pkgs;
+  asar = callPackage ./tools/asar { };
 }

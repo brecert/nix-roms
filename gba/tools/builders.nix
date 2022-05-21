@@ -1,8 +1,6 @@
-{ pkgs
-, stdenv
+{ stdenv
 , callPackage
 , libpng
-, ...
 }:
 
 rec {
@@ -29,7 +27,7 @@ rec {
       mkTool = attrs: mkToolFor ({ inherit src; } // attrs);
     in
     {
-      agbcc = callPackage ./agbcc pkgs;
+      agbcc = callPackage ./agbcc { };
 
       gbagfx = mkTool {
         name = "gbagfx";

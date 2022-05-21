@@ -1,5 +1,5 @@
-{ pkgs, callPackage, ... }:
+{ callPackage }:
 
 {
-  sm64plus = callPackage ./sm64plus pkgs;
+  sm64plus = callPackage ./sm64plus { };
 }

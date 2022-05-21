@@ -31,7 +31,6 @@
     }.${region};
   })
 , baseAssets ? null
-, ...
 }:
 
 stdenv.mkDerivation rec {

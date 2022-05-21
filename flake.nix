@@ -12,31 +12,35 @@
       };
 
       inherit (pkgs) lib callPackage;
+      inherit (lib.debug) traceVal;
       inherit (lib.attrsets) recursiveUpdate;
 
+      callpkg = { inherit callPackage; };
       flattenAttrList = lib.lists.foldr (a: b: lib.recursiveUpdate a b) { };
 
-      gbaTools = import ./gba/tools pkgs;
-      genesisTools = import ./genesis/tools.nix pkgs;
+      gbaTools = callPackage ./gba/tools { };
+      genesisTools = callPackage ./genesis/tools.nix { };
     in
     {
       # todo: add sameboy or mGBC runner for fun
       packages.${system} =
         (flattenAttrList [
-          gbaTools
+          # gbaTools
           { inherit (genesisTools) s3p2bin; }
 
-          (import ./pc/games.nix pkgs)
-          
-          (import ./nes/tools.nix pkgs)
-          (import ./nes/games.nix pkgs)
-          
-          (import ./snes/tools.nix pkgs)
-          (import ./snes/games.nix pkgs)
-          
+          (import ./pc/games.nix callpkg)
+
+          (import ./nes/tools.nix callpkg)
+          (import ./nes/games.nix callpkg)
+
+          (import ./snes/tools.nix callpkg)
+          (import ./snes/games.nix callpkg)
+
+          # todo: scope these
           (import ./gba/games.nix pkgs)
-          
-          (import ./genesis/games.nix pkgs)
+          (import ./gbc/games.nix pkgs)
+
+          (import ./genesis/games.nix callpkg)
         ]);
     };
 }

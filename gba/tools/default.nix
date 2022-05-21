@@ -1,10 +1,6 @@
-{ pkgs
-, stdenv
-, callPackage
+{ callPackage
 , fetchFromGitHub
-, libpng
-, mkToolsFor ? (import ./builders.nix pkgs).mkToolsFor
-, ...
+, mkToolsFor ? (callPackage ./builders.nix { }).mkToolsFor
 }:
 
 mkToolsFor (fetchFromGitHub {

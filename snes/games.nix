@@ -1,4 +1,4 @@
-{ pkgs, callPackage, ... }:
+{ callPackage }:
 
 {
   smw-jp = callPackage ./games/smw/rom.nix { version = "jp"; };

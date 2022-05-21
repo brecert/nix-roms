@@ -1,10 +1,12 @@
-{ pkgs
-, lib
+{ lib
 , stdenv
+, callPackage
+, symlinkJoin
+, fetchFromGitHub
 , gcc-arm-embedded-8
 , libpng
 , bash
-, mkToolsFor ? (import ./tools/builders.nix pkgs).mkToolsFor
+, mkToolsFor ? (callPackage ./tools/builders.nix { }).mkToolsFor
 , ...
 }:
 
@@ -37,7 +39,6 @@ let
       ln -s ${gbaTools.ramscrgen} tools/ramscrgen
       ln -s ${gbaTools.rsfont} tools/rsfont
       ln -s ${gbaTools.scaninc} tools/scaninc
-
       ln -s ${gbaTools.agbcc} tools/agbcc
 
       runHook postPatch
@@ -63,7 +64,7 @@ let
     buildGBARom (rec {
       inherit pname version;
 
-      src = pkgs.fetchFromGitHub {
+      src = fetchFromGitHub {
         owner = "pret";
         repo = "pokeruby";
         rev = "1380ad46772737fd9a21a4ff4be9f61d81b59c4b";
@@ -79,7 +80,7 @@ let
     buildGBARom ({
       inherit pname version;
 
-      src = pkgs.fetchFromGitHub {
+      src = fetchFromGitHub {
         owner = "pret";
         repo = "pokefirered";
         rev = "0ef73070401817add41f79cb8ad2a89077e272b7";
@@ -95,7 +96,7 @@ let
     buildGBARom ({
       inherit name;
 
-      src = pkgs.fetchFromGitHub {
+      src = fetchFromGitHub {
         owner = "pret";
         repo = "pokeemerald";
         rev = "7d2344c07bea9a46993a92d4611fba80545acdd2";

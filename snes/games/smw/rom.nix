@@ -1,11 +1,9 @@
 { lib
-, pkgs
 , stdenv
 , callPackage
 , fetchFromGitHub
 , version ? "us"
-, asar ? (callPackage ../../tools/asar pkgs)
-, ...
+, asar ? (callPackage ../../tools/asar { })
 }:
 
 stdenv.mkDerivation {

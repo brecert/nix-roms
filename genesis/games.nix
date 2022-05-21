@@ -1,10 +1,5 @@
-{ pkgs
-, stdenv
-, fetchFromGitHub
-, asl
-, python
-, genesis ? (import ./tools.nix pkgs)
-, ...
+{ callPackage
+, genesis ? (callPackage ./tools.nix { })
 }:
 
 {

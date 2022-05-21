@@ -5,7 +5,6 @@
 , gcc-arm-embedded-8
 , bintools-unwrapped
 , bash
-, ...
 }:
 
 let

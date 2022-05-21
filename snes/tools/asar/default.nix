@@ -3,7 +3,6 @@
 , fetchFromGitHub
 , cmake
 , pkg-config
-, ...
 }:
 
 stdenv.mkDerivation {
@@ -24,7 +23,7 @@ stdenv.mkDerivation {
 
   preConfigure = ''
     cd src/asar
-  ''; 
+  '';
 
   installPhase = ''
     runHook preInstall

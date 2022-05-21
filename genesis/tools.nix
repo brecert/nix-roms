@@ -2,7 +2,6 @@
 , fetchFromGitHub
 , asl
 , python
-, ...
 }:
 
 let
