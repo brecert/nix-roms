@@ -32,6 +32,7 @@
           (import ./nes/games.nix pkgs)
           
           (import ./snes/tools.nix pkgs)
+          (import ./snes/games.nix pkgs)
           
           (import ./gba/games.nix pkgs)
           
