@@ -27,9 +27,14 @@
           { inherit (genesisTools) s3p2bin; }
 
           (import ./pc/games.nix pkgs)
+          
           (import ./nes/tools.nix pkgs)
           (import ./nes/games.nix pkgs)
+          
+          (import ./snes/tools.nix pkgs)
+          
           (import ./gba/games.nix pkgs)
+          
           (import ./genesis/games.nix pkgs)
         ]);
     };
