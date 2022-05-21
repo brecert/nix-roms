@@ -29,6 +29,9 @@
           (import ./gba/games.nix pkgs)
           (import ./gbc/games.nix pkgs)
           (import ./genesis/games.nix pkgs)
+          
+          (import ./nes/tools.nix pkgs)
+          (import ./nes/games.nix pkgs)
         ]);
     };
 }
