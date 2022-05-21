@@ -11,7 +11,7 @@
         config.allowUnfree = true;
       };
 
-      inherit (pkgs) lib callPackage;
+      inherit (pkgs) lib callPackage fetchFromGitHub;
       inherit (lib.debug) traceVal;
       inherit (lib.attrsets) recursiveUpdate;
 
@@ -38,7 +38,9 @@
 
           # todo: scope these
           (import ./gba/games.nix pkgs)
-          (import ./gbc/games.nix pkgs)
+          (import ./gbc/games.nix {
+            inherit (pkgs) callPackage fetchFromGitHub;
+          })
 
           (import ./genesis/games.nix callpkg)
         ]);
