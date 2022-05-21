@@ -11,6 +11,7 @@ result
 *.gbc
 *.bin
 *.z64
+*.nes
 
 # mgba
 patch
