@@ -17,21 +17,21 @@
       flattenAttrList = lib.lists.foldr (a: b: lib.recursiveUpdate a b) { };
 
       gbaTools = import ./gba/tools pkgs;
-      genesisTools = import ./genesis/builders.nix pkgs;
+      genesisTools = import ./genesis/tools.nix pkgs;
     in
     {
       # todo: add sameboy or mGBC runner for fun
       packages.${system} =
-        { inherit (genesisTools) s3p2bin; } //
-        { sm64plus = callPackage ./pc/sm64plus pkgs; } //
         (flattenAttrList [
           gbaTools
-          (import ./gba/games.nix pkgs)
-          (import ./gbc/games.nix pkgs)
-          (import ./genesis/games.nix pkgs)
-          
+          { inherit (genesisTools) s3p2bin; }
+
           (import ./nes/tools.nix pkgs)
           (import ./nes/games.nix pkgs)
+          (import ./gba/games.nix pkgs)
+          (import ./genesis/games.nix pkgs)
+
+          { sm64plus = callPackage ./pc/sm64plus pkgs; }
         ]);
     };
 }

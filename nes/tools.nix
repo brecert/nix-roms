@@ -1,5 +1,5 @@
 { pkgs, callPackage, ... }:
 
 {
-  asm6f = callPackage ./games/asm6f pkgs;
+  asm6f = callPackage ./tools/asm6f pkgs;
 }

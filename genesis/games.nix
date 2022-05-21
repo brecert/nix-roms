@@ -3,7 +3,7 @@
 , fetchFromGitHub
 , asl
 , python
-, genesis ? (import ./builders.nix pkgs)
+, genesis ? (import ./tools.nix pkgs)
 , ...
 }:
 
