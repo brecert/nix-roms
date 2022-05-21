@@ -26,12 +26,11 @@
           gbaTools
           { inherit (genesisTools) s3p2bin; }
 
+          (import ./pc/games.nix pkgs)
           (import ./nes/tools.nix pkgs)
           (import ./nes/games.nix pkgs)
           (import ./gba/games.nix pkgs)
           (import ./genesis/games.nix pkgs)
-
-          { sm64plus = callPackage ./pc/sm64plus pkgs; }
         ]);
     };
 }
