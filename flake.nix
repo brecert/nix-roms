@@ -1,5 +1,5 @@
 {
-  description = "assembling and compiling dissassembly and decompilation game projects";
+  description = "nix derivations for misc decompilation projects";
 
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
@@ -11,9 +11,7 @@
         config.allowUnfree = true;
       };
 
-      inherit (pkgs) lib callPackage callPackages fetchFromGitHub;
-      inherit (lib.debug) traceVal;
-      inherit (lib.attrsets) recursiveUpdate;
+      inherit (pkgs) lib callPackages;
 
       flattenAttrList = lib.lists.foldr (a: b: lib.recursiveUpdate a b) { };
     in
