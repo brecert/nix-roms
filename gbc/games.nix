@@ -85,17 +85,17 @@
   };
 
   # todo: dry?
-  ladx-azlj = callPackage ./games/ladx/rom.nix { romName = "azlj"; version = "1.0"; };
-  ladx-azlj-r1 = callPackage ./games/ladx/rom.nix { romName = "azlj-r1"; version = "1.1"; };
-  ladx-azlj-r2 = callPackage ./games/ladx/rom.nix { romName = "azlj-r2"; version = "1.2"; };
+  ladx-azlj = callPackage ./games/ladx/rom.nix { romName = "azlj"; version = "jp-1.0"; };
+  ladx-azlj-r1 = callPackage ./games/ladx/rom.nix { romName = "azlj-r1"; version = "jp-1.1"; };
+  ladx-azlj-r2 = callPackage ./games/ladx/rom.nix { romName = "azlj-r2"; version = "jp-1.2"; };
 
-  ladx-azle = callPackage ./games/ladx/rom.nix { romName = "azle"; version = "1.0"; };
-  ladx-azle-r1 = callPackage ./games/ladx/rom.nix { romName = "azle-r1"; version = "1.1"; };
-  ladx-azle-r2 = callPackage ./games/ladx/rom.nix { romName = "azle-r2"; version = "1.2"; };
+  ladx-azle = callPackage ./games/ladx/rom.nix { romName = "azle"; version = "en-1.0"; };
+  ladx-azle-r1 = callPackage ./games/ladx/rom.nix { romName = "azle-r1"; version = "en-1.1"; };
+  ladx-azle-r2 = callPackage ./games/ladx/rom.nix { romName = "azle-r2"; version = "en-1.2"; };
 
-  ladx-azlg = callPackage ./games/ladx/rom.nix { romName = "azlg"; version = "1.0"; };
-  ladx-azlg-r1 = callPackage ./games/ladx/rom.nix { romName = "azlg-r1"; version = "1.1"; };
+  ladx-azlg = callPackage ./games/ladx/rom.nix { romName = "azlg"; version = "de-1.0"; };
+  ladx-azlg-r1 = callPackage ./games/ladx/rom.nix { romName = "azlg-r1"; version = "de-1.1"; };
 
-  ladx-azlf = callPackage ./games/ladx/rom.nix { romName = "azlf"; version = "1.0"; };
-  ladx-azlf-r1 = callPackage ./games/ladx/rom.nix { romName = "azlf-r1"; version = "1.1"; };
+  ladx-azlf = callPackage ./games/ladx/rom.nix { romName = "azlf"; version = "fr-1.0"; };
+  ladx-azlf-r1 = callPackage ./games/ladx/rom.nix { romName = "azlf-r1"; version = "fr-1.1"; };
 }
