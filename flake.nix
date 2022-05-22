@@ -11,21 +11,20 @@
         config.allowUnfree = true;
       };
 
-      inherit (pkgs) lib callPackage fetchFromGitHub;
+      inherit (pkgs) lib callPackage callPackages fetchFromGitHub;
       inherit (lib.debug) traceVal;
       inherit (lib.attrsets) recursiveUpdate;
 
       callpkg = { inherit callPackage; };
       flattenAttrList = lib.lists.foldr (a: b: lib.recursiveUpdate a b) { };
 
-      gbaTools = callPackage ./gba/tools { };
       genesisTools = callPackage ./genesis/tools.nix { };
     in
     {
       # todo: add sameboy or mGBC runner for fun
       packages.${system} =
         (flattenAttrList [
-          # gbaTools
+          (callPackages ./gba/tools.nix { })
           { inherit (genesisTools) s3p2bin; }
 
           (import ./pc/games.nix callpkg)
@@ -37,10 +36,9 @@
           (import ./snes/games.nix callpkg)
 
           # todo: scope these
-          (import ./gba/games.nix pkgs)
-          (import ./gbc/games.nix {
-            inherit (pkgs) callPackage fetchFromGitHub;
-          })
+          (callPackages ./gba/games.nix { })
+          (callPackages ./gba/tools.nix { })
+          (callPackages ./gbc/games.nix { })
 
           (import ./genesis/games.nix callpkg)
         ]);

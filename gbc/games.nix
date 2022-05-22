@@ -1,6 +1,6 @@
 { callPackage
 , fetchFromGitHub
-, mkPretRom ? callPackage ./tools/mkPretRom.nix
+, mkPretRom ? callPackage ./tools/mkPretRom.nix { }
 }:
 
 {

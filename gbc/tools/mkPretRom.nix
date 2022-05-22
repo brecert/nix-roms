@@ -1,10 +1,13 @@
 { stdenv
 , rgbds
 , which
-, ...
-}@attrs:
+}:
+
+{ name, ... }@attrs:
 
 stdenv.mkDerivation ({
+  inherit name;
+
   nativeBuildInputs = [ rgbds which ];
 
   buildPhase = ''
