@@ -1,9 +1,11 @@
-{ callPackage }:
+{ callPackage
+, mkSmw ? callPackage ./games/smw/rom.nix
+}:
 
 {
-  smw-jp = callPackage ./games/smw/rom.nix { version = "jp"; };
-  smw-us = callPackage ./games/smw/rom.nix { version = "us"; };
-  smw-nss = callPackage ./games/smw/rom.nix { version = "nss"; };
-  smw-eu0 = callPackage ./games/smw/rom.nix { version = "eu0"; };
-  smw-eu1 = callPackage ./games/smw/rom.nix { version = "eu1"; };
+  smw-jp = mkSmw { version = "jp"; };
+  smw-us = mkSmw { version = "us"; };
+  smw-nss = mkSmw { version = "nss"; };
+  smw-eu0 = mkSmw { version = "eu0"; };
+  smw-eu1 = mkSmw { version = "eu1"; };
 }

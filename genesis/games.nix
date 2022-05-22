@@ -1,9 +1,9 @@
 { callPackage
-, genesis ? (callPackage ./tools.nix { })
+, mkSonic3Rom ? callPackage ./games/sonic3/mkRom.nix { }
 }:
 
 {
-  sonic3 = genesis.mkSonic3Rom {
+  sonic3 = mkSonic3Rom {
     name = "Sonic 3";
     assembleFlags = [
       "-o sonic3k.p"
@@ -14,7 +14,7 @@
     ];
   };
 
-  sonicknuckles = genesis.mkSonic3Rom {
+  sonicknuckles = mkSonic3Rom {
     name = "Sonic & Knuckles";
     assembleFlags = [
       "-D Sonic3_Complete=0"
@@ -23,7 +23,7 @@
     ];
   };
 
-  sonic3knuckles = genesis.mkSonic3Rom {
+  sonic3knuckles = mkSonic3Rom {
     name = "Sonic & Knuckles + Sonic 3";
     assembleFlags = [
       "-D Sonic3_Complete=1"
