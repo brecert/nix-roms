@@ -31,4 +31,6 @@
       "sonic3k.asm"
     ];
   };
+
+  phantasy_star_iv = callPackage ./games/phantasy_star_iv { };
 }
