@@ -5,13 +5,13 @@
 , asl-1_42_211 ? callPackage ../../tools/asl-1_42_211 { }
 , ps4p2bin ? callPackage ../../tools/ps4p2bin { }
 
-# 0 = Japanese; 1 = English; 2 = Portuguese
+  # 0 = Japanese; 1 = English; 2 = Portuguese
 , revision ? 1
-# include bug fixes
+  # include bug fixes
 , enableBugfixes ? false
-# enable running while holding the B button
+  # enable running while holding the B button
 , enableRunning ? false
-# Set this to true to remove the red cross sign from the nurse's coat, just like the Virtual Console version
+  # Set this to true to remove the red cross sign from the nurse's coat, just like the Virtual Console version
 , enableCrossPatch ? false
 }:
 
@@ -47,15 +47,13 @@ stdenvNoCC.mkDerivation {
       --replace "enable_run = 0" "enable_run = ${boolToInt enableRunning}" \
       --replace "cross_patch = 0" "cross_patch = ${boolToInt enableCrossPatch}"
 
-    cat ps3.options.asm
-
     runHook postConfig
   '';
 
   buildPhase = ''
     runHook preBuild
 
-    asl -xx -c -E -A -l -E "!2" -i ./. -shareout out.h -o out.p ps3.asm > /dev/null
+    asl -c -A -i ./. -shareout out.h -o out.p ps3.asm
     ps4p2bin out.p out.bin out.h
 
     runHook postBuild

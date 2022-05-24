@@ -4,15 +4,15 @@
 , asl
 , ps4p2bin ? callPackage ../../tools/ps4p2bin { }
 
-# 0 = Japanese; 1 = English; 2 = European
+  # 0 = Japanese; 1 = English; 2 = European
 , revision ? 1
-# include bug fixes
+  # include bug fixes
 , enableBugfixes ? false
-# include optional (larger) fixes
+  # include optional (larger) fixes
 , enableFixes ? false
-# Set to true to tone down flashing effects; values are taken from the Virtual Console version
+  # Set to true to tone down flashing effects; values are taken from the Virtual Console version
 , enableLightSensitivityPatch ? false
-# dialogue is stored uncompressed
+  # dialogue is stored uncompressed
 , uncompressedDialog ? false
 }:
 
@@ -31,7 +31,7 @@ stdenvNoCC.mkDerivation {
   };
 
   nativeBuildInputs = [ asl ps4p2bin ];
-  
+
   dontFixup = true;
 
   patchPhase = ''
