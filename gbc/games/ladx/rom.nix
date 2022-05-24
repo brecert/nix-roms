@@ -36,6 +36,6 @@ stdenv.mkDerivation {
 
   meta = with lib; {
     homepage = "https://github.com/zladx/LADX-Disassembly";
-    description = "Links Awakening DX ${language} translation";
+    description = "Links Awakening DX";
   };
 }
