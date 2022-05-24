@@ -30,11 +30,19 @@ stdenv.mkDerivation {
   '';
 
   buildPhase = ''
+    runHook preBuild
+
     asl -xx -c -E -A -l -E "!2" -i ./. -shareout out.h -o out.p ps2.asm > /dev/null
     ps4p2bin out.p out.bin out.h
+
+    runHook postBuild
   '';
 
   installPhase = ''
+    runHook preInstall
+
     mv out.bin $out
+
+    runHook postInstall
   '';
 }
