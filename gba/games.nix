@@ -47,6 +47,9 @@ let
 in
 
 {
+  gameboy-tetris = callPackage ./games/tetris { };
+
+  # todo: separate poke
   # todo: dry?
   pokeruby = mkPokeRuby {
     name = "pokeruby";
