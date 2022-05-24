@@ -19,7 +19,7 @@ stdenv.mkDerivation {
     asl
     ps4p2bin
   ];
-  
+
   postPatch = ''
     substituteInPlace ps2.asm \
       --replace "palettes/sega" "palettes/Sega" \

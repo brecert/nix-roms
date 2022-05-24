@@ -33,5 +33,6 @@
   };
 
   phantasy_star_ii = callPackage ./games/phantasy_star_ii { };
+  phantasy_star_iii = callPackage ./games/phantasy_star_iii { };
   phantasy_star_iv = callPackage ./games/phantasy_star_iv { };
 }
