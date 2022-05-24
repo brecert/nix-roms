@@ -1,19 +1,32 @@
-{ stdenv
+{ stdenvNoCC
 , callPackage
 , fetchzip
 , fetchFromGitHub
 , asl-1_42_211 ? callPackage ../../tools/asl-1_42_211 { }
 , ps4p2bin ? callPackage ../../tools/ps4p2bin { }
+
+# 0 = Japanese; 1 = English; 2 = Portuguese
+, revision ? 1
+# include bug fixes
+, enableBugfixes ? false
+# enable running while holding the B button
+, enableRunning ? false
+# Set this to true to remove the red cross sign from the nurse's coat, just like the Virtual Console version
+, enableCrossPatch ? false
 }:
 
-stdenv.mkDerivation {
-  name = "phantasy-star-iv";
+let
+  boolToInt = b: if b then "1" else "0"; # Convert boolean to integer string
+in
+
+stdenvNoCC.mkDerivation {
+  name = "phantasy-star-iii";
 
   src = fetchFromGitHub {
-    owner = "lory90";
+    owner = "brecert";
     repo = "ps3disasm";
-    rev = "c5a827a5da181c5508fbb4abe5afc8f53e413f6b";
-    sha256 = "sha256-o8CWvOv6grMBDtAmbCBocODcNmudularcUY7FVSmmko=";
+    rev = "b9b7d609ea6bafdee832bb0d574175fb3fe0a7f5";
+    sha256 = "sha256-6ZmCmZvubLSA9rzsQATwzH6V+I65pnuFc42amFQhbhU=";
   };
 
   nativeBuildInputs = [
@@ -22,17 +35,37 @@ stdenv.mkDerivation {
     ps4p2bin
   ];
 
-  patchPhase = ''
-    substituteInPlace ps3.asm \
-      --replace "general/portraits/mappings/uncompressed/Fortune teller.bin" "general/portraits/mappings/uncompressed/Fortune Teller.bin"
+  dontPatch = true;
+  dontFixup = true;
+
+  configurePhase = ''
+    runHook preConfig
+
+    substituteInPlace ps3.options.asm \
+      --replace "revision = 1" "revision = ${toString revision}" \
+      --replace "bugfixes = 0" "bugfixes = ${boolToInt enableBugfixes}" \
+      --replace "enable_run = 0" "enable_run = ${boolToInt enableRunning}" \
+      --replace "cross_patch = 0" "cross_patch = ${boolToInt enableCrossPatch}"
+
+    cat ps3.options.asm
+
+    runHook postConfig
   '';
 
   buildPhase = ''
+    runHook preBuild
+
     asl -xx -c -E -A -l -E "!2" -i ./. -shareout out.h -o out.p ps3.asm > /dev/null
     ps4p2bin out.p out.bin out.h
+
+    runHook postBuild
   '';
 
   installPhase = ''
+    runHook preInstall
+  
     mv out.bin $out
+    
+    runHook postInstall
   '';
 }
