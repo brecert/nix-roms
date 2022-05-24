@@ -32,6 +32,8 @@
 
           (callPackages ./gbc/games.nix { })
 
+          (callPackages ./master_system/games.nix { })
+
           (callPackages ./genesis/games.nix { })
           (callPackages ./genesis/tools.nix { })
         ]);

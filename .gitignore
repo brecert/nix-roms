@@ -12,6 +12,7 @@ result
 *.bin
 *.z64
 *.nes
+*.sms
 
 # mgba
 patch
